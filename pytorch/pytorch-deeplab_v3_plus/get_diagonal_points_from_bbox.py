@@ -17,10 +17,19 @@ def build_xml_arch(parsed_xml):
     y2 = 0
     y3 = 0
 
+    # label_dict = {"bg":(0,0,0), "tree":(1,1,1), "roof":(2,2,2), "grass":(3,3,3), "ground":(4,4,4), "obj":(5,5,5), "rail":(6,6,6)}
+    # tree_cnt = 0
+    # roof_cnt = 0
+    # grass_cnt = 0
+    # ground_cnt = 0
+    # obj_cnt = 0
+    # rail_cnt = 0
+
     label_dict = {"bg": (0, 0, 0), "goodroof": (1, 1, 1), "facility": (2, 2, 2), "rooftop": (3, 3, 3)}
     rooftop_cnt = 0
     facility_cnt = 0
     goodroof_cnt = 0
+
     saved_file = False
     saved_file_cnt = 0
     all_object_coordinates = []
@@ -105,6 +114,26 @@ def build_xml_arch(parsed_xml):
             y3 = obj.find('./bndbox/ymax').text
             x0, x1, x2, x3, y0, y1, y2, y3 = str(int(float(x0))), str(int(float(x1))), str(int(float(x2))), str(
                 int(float(x3))), str(int(float(y0))), str(int(float(y1))), str(int(float(y2))), str(int(float(y3)))
+
+        # if label == "tree" or label == "roof" or label == "grass" or label == "ground" or label == "obj" or label == "rail":
+        #     if label == "tree":
+        #         tree_cnt += 1
+        #         label_color = label_dict["tree"]
+        #     elif label == "roof":
+        #         roof_cnt += 1
+        #         label_color = label_dict["roof"]
+        #     elif label == "grass":
+        #         grass_cnt += 1
+        #         label_color = label_dict["grass"]
+        #     elif label == "ground":
+        #         ground_cnt += 1
+        #         label_color = label_dict["ground"]
+        #     elif label == "obj":
+        #         obj_cnt += 1
+        #         label_color = label_dict["obj"]
+        #     elif label == "rail":
+        #         rail_cnt += 1
+        #         label_color = label_dict["rail"]
 
         if label == "rooftop" or label == "facility" or label == "goodroof":
             if label == "rooftop":
@@ -196,6 +225,7 @@ def build_xml_arch(parsed_xml):
     if saved_file:
         saved_file_cnt += 1
     return goodroof_cnt, facility_cnt, rooftop_cnt, saved_file_cnt
+    # return tree_cnt, roof_cnt, grass_cnt, ground_cnt, obj_cnt, rail_cnt, saved_file_cnt
 
 
 
@@ -208,10 +238,19 @@ if __name__ == "__main__":
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
+
     goodroof_cnt = 0
     facility_cnt = 0
     rooftop_cnt = 0
     saved_file_cnt = 0
+
+    # tree_cnt = 0
+    # roof_cnt = 0
+    # grass_cnt = 0
+    # ground_cnt = 0
+    # obj_cnt = 0
+    # rail_cnt = 0
+    # saved_file_cnt = 0
 
     for path, dirs, files in os.walk(anno_dir):
         for file in files:
@@ -235,15 +274,30 @@ if __name__ == "__main__":
             xml_parse['path'] = tree.getroot().find('path').text
             xml_parse['output_dir'] = output_dir
 
+            # tree, roof, grass, ground, obj, rail, save_file = build_xml_arch(xml_parse)
+            # tree_cnt += tree
+            # roof_cnt += roof
+            # grass_cnt += grass
+            # ground_cnt += ground
+            # obj_cnt += obj
+            # rail_cnt += rail
+            # saved_file_cnt += save_file
+
             goodroof, facility, rooftop, save_file = build_xml_arch(xml_parse)
             goodroof_cnt += goodroof
             facility_cnt += facility
             rooftop_cnt += rooftop
             saved_file_cnt += save_file
+
     # with open(os.path.join(cnt_dir, "cnt.txt"), 'w') as f:
     #     f.write("total  --- goodroof : [{}] | facility : [{}] | rooftop : [{}] | saved_file : [{}]".format(goodroof_cnt, facility_cnt, rooftop_cnt, saved_file_cnt))
-    print("total  --- goodroof : [{}] | facility : [{}] | rooftop : [{}] | saved_file : [{}]".format(goodroof_cnt, facility_cnt, rooftop_cnt, saved_file_cnt))
 
+    print("total  --- goodroof : [{}] | facility : [{}] | rooftop : [{}] | saved_file : [{}]".format(goodroof_cnt, facility_cnt, rooftop_cnt, saved_file_cnt))
+    # print("total  --- tree : [{}] | roof : [{}] | grass : [{}] | ground : [{}] | obj : [{}] | rail : [{}]  saved_file : [{}]".format(tree_cnt,
+    #                                                                                                  roof_cnt,
+    #                                                                                                  grass_cnt, ground_cnt, obj_cnt, rail_cnt,
+    #                                                                                                  saved_file_cnt))
+    #
 
 
 

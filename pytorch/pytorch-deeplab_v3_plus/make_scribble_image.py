@@ -13,8 +13,12 @@ ground_cnt = 0
 obj_cnt = 0
 rail_cnt=0
 
-dir_path = "/home/qisens/2020.3~/rloss/data/tree_scribble/json"
-scribble_path = "/home/qisens/2020.3~/rloss/data/tree_scribble/scribble_png"
+#you should give full path
+dir_path = "/media/qisens/2tb1/python_projects/Scribble_Training_Project/data/tree_scribble/json"
+scribble_path = "/media/qisens/2tb1/python_projects/Scribble_Training_Project/data/tree_scribble/scribble_png"
+if not os.path.exists(scribble_path):
+    os.makedirs(scribble_path)
+
 for path, dirs, files in os.walk(dir_path):
     for file in files:
         file_path = os.path.join(path, file)
