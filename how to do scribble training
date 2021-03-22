@@ -1,0 +1,49 @@
+1. prepare annotation xml files 
+   * if you executed scribble annotation in labelme by yourself, then go to '2'. 
+   * if you only have bounding box annotation, then go to '3'. 
+
+2. make image files specialized for scribble training based on your annotation files.
+   - ./pytorch/pytorch-deeplab_v3_plus/make_scribble_image.py
+
+3. draw diagonal line inside bounding box and make it as image files specialized for scribble training
+   - ./pytorch/pytorch-deeplab_v3_plus/get_diagonal_points_from_bbox.py
+
+4. make dataset list text file for each of train and val dataset
+   - ./pytorch/pytorch-deeplab_v3_plus/make_split_txt.py
+
+5. go to ./pytorch/pytorch-deeplab_v3_plus/tree_train_withdensecrfloss.py (main code)
+   * parser.add_argument('--dataset', type=str, default='pascal',
+                choices=['pascal', 'coco', 'cityscapes', 'tree', 'goodroof']
+
+     ##put these parameters in configuration and change '--dataset' based on your dataset name
+   * fix 'class Trainer(object):
+    def __init__(self, args):
+        self.label_ls = ["bg", "tree", "roof", "grass", "ground", "obj", "rail"]
+        #self.label_ls = ["bg", "flatroof", "facility", "rooftop"]'
+
+6. go to ./pytorch/pytorch-deeplab_v3_plus/mypath.py
+   -  add your dataset path
+ 
+7. go to ./pytorch/pytorch-deeplab_v3_plus/dataloaders/datasets
+   - copy tree.py and rename based on your dataset.  (if you want to maintain with 'tree' dataset, then you don't need to copy)
+   - change all related variables inside 'class VOCSegmentation(Dataset)'
+
+8. go to ./pytorch/pytorch-deeplab_v3_plus/dataloaders/__init__.py
+   - add your dataset info in 'def make_data_loader(args, **kwargs)'
+
+9. go to ./pytorch/pytorch-deeplab_v3_plus/dataloaders/utils_tree.py
+   - change dataset name in 'def decode_seg_map_sequence(label_masks, dataset='tree')'   -->(put your dataset name)
+   - add dataset info in 'def decode_segmap(label_mask, dataset, plot=False)'
+
+10. run ./pytorch/pytorch-deeplab_v3_plus/train_withdensecrfloss.sh
+
+11. checkpoint is saved at './pytorch/pytorch-deeplab_v3_plus/run'
+    run tensorboard to check how this training is going on (check carefully if it's correctly running)
+    best model is saved in this path automatically
+
+12. run ./pytorch/pytorch-deeplab_v3_plus/start_inference.sh
+
+13. if you want to compare inference result image and original image->
+    go to ./pytorch/pytorch-deeplab_v3_plus/inference_result.py
+    - change related variables and paths to compare original images and inferenced images in a easy way
+
